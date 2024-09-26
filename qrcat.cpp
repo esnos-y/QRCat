@@ -19,6 +19,10 @@ int main(int argc, char **argv) {
     const char *image_path = argv[1];
 
     cv::Mat input_image = cv::imread(image_path, cv::IMREAD_GRAYSCALE);
+    if (input_image.empty()) {
+        std::cerr << "Failed to read image: " << image_path << std::endl;
+        return 1;
+    }
     cv::imshow("Input image", input_image);
     cv::waitKey(0);
 

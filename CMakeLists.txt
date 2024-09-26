@@ -4,6 +4,8 @@ project(QRCat_cmake_project)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 find_package(OpenCV REQUIRED CONFIG)
+find_library(ZBAR_LIB zbar REQUIRED)
+#message(STATUS ${ZBAR_LIB})
 
 # Print all CMake variables
 # https://stackoverflow.com/a/9328525/27298874
@@ -13,19 +15,19 @@ find_package(OpenCV REQUIRED CONFIG)
 #    message(STATUS "${_variableName}=${${_variableName}}")
 #endforeach()
 
-set(ZBAR_DIR "C:/Program Files (x86)/ZBar")
+#set(ZBAR_DIR "C:/Program Files (x86)/ZBar")
 
 add_executable(qrcat qrcat.cpp)
-target_include_directories(qrcat PRIVATE ${ZBAR_DIR}/include)
-target_link_directories(qrcat PRIVATE ${ZBAR_DIR}/lib)
-target_link_libraries(qrcat PRIVATE ${OpenCV_LIBS} libzbar-0)
+#target_include_directories(qrcat PRIVATE ${ZBAR_DIR}/include)
+#target_link_directories(qrcat PRIVATE ${ZBAR_DIR}/lib)
+target_link_libraries(qrcat PRIVATE ${OpenCV_LIBS} ${ZBAR_LIB})
 
 set(PRE_EXCLUDE_REGEXES)
 set(POST_EXCLUDE_REGEXES)
 set(RUNTIME_DEPS_DIRS)
 
 #list(APPEND RUNTIME_DEPS_DIRS ${OpenCV_DIR}/${OpenCV_ARCH}/${OpenCV_RUNTIME}/bin)
-list(APPEND RUNTIME_DEPS_DIRS ${ZBAR_DIR}/bin)
+#list(APPEND RUNTIME_DEPS_DIRS ${ZBAR_DIR}/bin)
 
 if (WIN32)
     list(APPEND PRE_EXCLUDE_REGEXES "^api-ms-.*$" "^ext-ms-.*$")
