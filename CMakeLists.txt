@@ -18,6 +18,13 @@ find_library(ZBAR_LIB zbar REQUIRED)
 #set(ZBAR_DIR "C:/Program Files (x86)/ZBar")
 
 add_executable(qrcat qrcat.cpp)
+if (UNIX AND NOT APPLE)
+    set_target_properties(
+            qrcat
+            PROPERTIES
+            INSTALL_RPATH $ORIGIN/../lib
+    )
+endif ()
 #target_include_directories(qrcat PRIVATE ${ZBAR_DIR}/include)
 #target_link_directories(qrcat PRIVATE ${ZBAR_DIR}/lib)
 target_link_libraries(qrcat PRIVATE ${OpenCV_LIBS} ${ZBAR_LIB})
@@ -43,4 +50,12 @@ install(TARGETS qrcat
         PRE_EXCLUDE_REGEXES ${PRE_EXCLUDE_REGEXES}
         POST_EXCLUDE_REGEXES ${POST_EXCLUDE_REGEXES}
 )
+if (UNIX AND NOT APPLE)
+    configure_file(
+            ${CMAKE_CURRENT_SOURCE_DIR}/Set_Libs_RUNPATH.cmake.in
+            ${CMAKE_CURRENT_BINARY_DIR}/Set_Libs_RUNPATH.cmake
+            @ONLY
+    )
+    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/Set_Libs_RUNPATH.cmake)
+endif ()
 include(CPack)
