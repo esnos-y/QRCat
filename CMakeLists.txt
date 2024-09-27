@@ -33,6 +33,8 @@ if (WIN32)
     list(APPEND PRE_EXCLUDE_REGEXES "^api-ms-.*$" "^ext-ms-.*$")
     list(APPEND POST_EXCLUDE_REGEXES "^.*system32/.*$")
     list(APPEND RUNTIME_DEPS_DIRS ${CMAKE_SYSTEM_LIBRARY_PATH})
+elseif (UNIX AND NOT APPLE)
+    list(APPEND PRE_EXCLUDE_REGEXES "^libc\\.so.*$" "^ld-linux-.*\\.so.*$")
 endif ()
 
 install(TARGETS qrcat
