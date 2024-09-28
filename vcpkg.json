@@ -1,0 +1,12 @@
+{
+  "name" : "qrcat-cmake-project",
+  "version-string" : "1.0.0",
+  "builtin-baseline" : "3d89599850c8168fa4b560367b06c1be52645b20",
+  "dependencies" : [ {
+    "name" : "mchehab-zbar",
+    "version>=" : "0.23.90#5"
+  }, {
+    "name" : "opencv",
+    "version>=" : "4.8.0#1"
+  } ]
+}
