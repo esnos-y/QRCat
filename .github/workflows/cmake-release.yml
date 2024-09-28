@@ -18,18 +18,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install at-spi2-core dependencies (otherwise installing specified vcpkg packages fails)
+      - name: Install dependencies
         if: matrix.os == 'ubuntu-latest'
         run: |
-          sudo apt-get install libxi-dev libxtst-dev
+          sudo apt-get install libopencv-dev libzbar-dev
 
+      # Thankfully vcpkg shell script supports bash on Windows
       - name: Setup vcpkg
+        if: matrix.os == 'windows-latest'
         shell: bash
         run: |
           git clone https://github.com/microsoft/vcpkg.git
           cd vcpkg
           chmod +x ./bootstrap-vcpkg.sh
           ./bootstrap-vcpkg.sh
+          echo 'CMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"' >> "$GITHUB_ENV"
 
       - name: Set reusable strings
         id: strings
@@ -45,7 +48,6 @@ jobs:
           cmake -B ${{ steps.strings.outputs.build-output-dir }}
           -DCMAKE_BUILD_TYPE=${{ steps.strings.outputs.build-type }}
           -S ${{ github.workspace }}
-          -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
 
       - name: Build
         # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
