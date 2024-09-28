@@ -6,7 +6,7 @@ project(QRCat_cmake_project
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-find_package(OpenCV REQUIRED CONFIG)
+find_package(OpenCV CONFIG REQUIRED)
 find_library(ZBAR_LIB zbar REQUIRED)
 #message(STATUS ${ZBAR_LIB})
 
