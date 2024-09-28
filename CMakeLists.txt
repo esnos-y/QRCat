@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.22)
-project(QRCat_cmake_project)
+project(QRCat_cmake_project
+        VERSION 0.0.1
+        LANGUAGES CXX
+)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
@@ -58,4 +61,5 @@ if (UNIX AND NOT APPLE)
     )
     install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/Set_Libs_RUNPATH.cmake)
 endif ()
+set(CPACK_PACKAGE_NAME QRCat)
 include(CPack)
