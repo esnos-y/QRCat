@@ -4,8 +4,6 @@ project(QRCat_cmake_project
         LANGUAGES CXX
 )
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
 find_package(OpenCV CONFIG REQUIRED)
 find_library(ZBAR_LIB zbar REQUIRED)
 #message(STATUS ${ZBAR_LIB})
@@ -21,6 +19,11 @@ find_library(ZBAR_LIB zbar REQUIRED)
 #set(ZBAR_DIR "C:/Program Files (x86)/ZBar")
 
 add_executable(qrcat qrcat.cpp)
+set_target_properties(
+        qrcat
+        PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+)
 if (UNIX AND NOT APPLE)
     set_target_properties(
             qrcat
