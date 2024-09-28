@@ -17,12 +17,14 @@ jobs:
 
     steps:
     - name: Setup vcpkg
+      id: vcpkg
       shell: bash
       run: |
         git clone https://github.com/microsoft/vcpkg.git
         cd vcpkg
         chmod +x ./bootstrap-vcpkg.sh
         ./bootstrap-vcpkg.sh
+        echo "vcpkg-root=$PWD" >> "$GITHUB_OUTPUT"
 
     - uses: actions/checkout@v4
 
@@ -40,7 +42,7 @@ jobs:
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_BUILD_TYPE=${{ steps.strings.outputs.build-type }}
         -S ${{ github.workspace }}
-        -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+        -DCMAKE_TOOLCHAIN_FILE=${{ steps.vcpkg.outputs.vcpkg-root }}/scripts/buildsystems/vcpkg.cmake
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
