@@ -32,7 +32,7 @@ jobs:
           cd vcpkg
           chmod +x ./bootstrap-vcpkg.sh
           ./bootstrap-vcpkg.sh
-          echo 'CMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"' >> "$GITHUB_ENV"
+          echo 'CMAKE_TOOLCHAIN_FILE="$PWD/scripts/buildsystems/vcpkg.cmake"' >> "$GITHUB_ENV"
 
       - name: Set reusable strings
         id: strings
@@ -66,6 +66,7 @@ jobs:
           cpack -G ZIP
 
       - name: Upload release
+        shell: bash
         working-directory: ${{ steps.strings.outputs.build-output-dir }}
         run: |
           gh release upload "$GITHUB_SHA" QRCat*.zip
