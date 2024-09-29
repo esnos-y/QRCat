@@ -10,7 +10,7 @@ def main():
         return 1
 
     elfs_dir = sys.argv[1]
-    print(elfs_dir)
+    print(f"Setting RUNPATH for ELFs in: {elfs_dir}")
     with os.scandir(elfs_dir) as it:
         entry: os.DirEntry[str]
         for entry in it:
