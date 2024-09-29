@@ -3,38 +3,21 @@ import shutil
 import subprocess as sp
 from pathlib import Path
 import sys
-from typing import Optional
 
 
-def print_help(file):
-    print("Valid usages:", file=file)
-    print("Without vcpkg: build_release.py", file=file)
-    print("With vcpkg: build_release.py --vcpkg /path/to/vcpkg", file=file)
-    print("Print this help message: build_release.py --help", file=file)
+def get_vcpkg_root_as_posix_path():
+    vcpkg_root = os.environ.get("VCPKG_ROOT", None)
+    if vcpkg_root is None:
+        return None
+    vcpkg_root = Path(vcpkg_root)
+    if not vcpkg_root.exists() or not vcpkg_root.is_dir() or not vcpkg_root.is_absolute():
+        print("Path stored in VCPKG_ROOT does not exist or is not a directory or is not an absolute path",
+              file=sys.stderr)
+        return None
+    return vcpkg_root.as_posix()
 
 
 def main():
-    # Yes I know argparse exists
-    vcpkg_root_posix: Optional[str] = None
-    if len(sys.argv) == 3:
-        if sys.argv[1] == "--vcpkg":
-            vcpkg_root = Path(sys.argv[2])
-            if not vcpkg_root.exists() or not vcpkg_root.is_dir() or not vcpkg_root.is_absolute():
-                print("Provided vcpkg root does not exist or is not a directory or is not an absolute path",
-                      file=sys.stderr)
-                return 1
-            vcpkg_root_posix = vcpkg_root.as_posix()
-        else:
-            print_help(sys.stderr)
-            return 1
-    elif len(sys.argv) == 2:
-        if sys.argv[1] == "--help":
-            print_help(sys.stdout)
-            return 0
-        else:
-            print_help(sys.stderr)
-            return 1
-
     source_dir = Path(__file__).parent
     build_dir = source_dir / "build"
     source_dir_posix = source_dir.as_posix()
@@ -46,6 +29,8 @@ def main():
         else:
             print("Aborting...")
             return 1
+
+    vcpkg_root_posix = get_vcpkg_root_as_posix_path()
     if vcpkg_root_posix is not None:
         os.environ["VCPKG_ROOT"] = vcpkg_root_posix
         os.environ["PATH"] = vcpkg_root_posix + os.pathsep + os.environ["PATH"]
