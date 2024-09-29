@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(QRCat_cmake_project
-        VERSION 0.0.1
-        LANGUAGES CXX
-)
+project(QRCat_cmake_project)
 
 find_package(OpenCV CONFIG REQUIRED)
 find_library(ZBAR_LIB zbar REQUIRED)
@@ -62,7 +59,7 @@ if (UNIX AND NOT APPLE)
             ${CMAKE_CURRENT_BINARY_DIR}/Set_Libs_RUNPATH.cmake
             @ONLY
     )
-    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/Set_Libs_RUNPATH.cmake)
+    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/set_libs_runpath.cmake)
 endif ()
 set(CPACK_PACKAGE_NAME QRCat)
 include(CPack)
