@@ -1,9 +1,7 @@
 import os
 import shutil
-from tempfile import TemporaryDirectory
 import subprocess as sp
 from pathlib import Path
-import platform
 import sys
 from typing import Optional
 
