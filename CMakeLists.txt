@@ -19,7 +19,7 @@ add_executable(qrcat qrcat.cpp)
 set_target_properties(
         qrcat
         PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin
 )
 if (UNIX AND NOT APPLE)
     set_target_properties(
@@ -55,11 +55,19 @@ install(TARGETS qrcat
 )
 if (UNIX AND NOT APPLE)
     configure_file(
-            ${CMAKE_CURRENT_SOURCE_DIR}/Set_Libs_RUNPATH.cmake.in
-            ${CMAKE_CURRENT_BINARY_DIR}/Set_Libs_RUNPATH.cmake
+            ${CMAKE_CURRENT_SOURCE_DIR}/scripts/set_libs_runpath.cmake.in
+            ${CMAKE_CURRENT_BINARY_DIR}/scripts/set_libs_runpath.cmake
             @ONLY
     )
-    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/set_libs_runpath.cmake)
+    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/scripts/set_libs_runpath.cmake)
+endif ()
+if (WIN32)
+    configure_file(
+            ${CMAKE_CURRENT_SOURCE_DIR}/scripts/sign_binaries_windows.cmake.in
+            ${CMAKE_CURRENT_BINARY_DIR}/scripts/sign_binaries_windows.cmake
+            @ONLY
+    )
+    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/scripts/sign_binaries_windows.cmake)
 endif ()
 set(CPACK_PACKAGE_NAME QRCat)
 include(CPack)

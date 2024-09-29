@@ -12,7 +12,6 @@ def main():
     elfs_dir = sys.argv[1]
     print(f"Setting RUNPATH for ELFs in: {elfs_dir}")
     with os.scandir(elfs_dir) as it:
-        entry: os.DirEntry[str]
         for entry in it:
             if entry.is_symlink():
                 continue
