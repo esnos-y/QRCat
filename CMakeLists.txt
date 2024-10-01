@@ -88,7 +88,7 @@ endif ()
 set(CPACK_PACKAGE_NAME QRCat)
 set(CPACK_SOURCE_IGNORE_FILES
         /cmake-build-.*/
-        /build/
+        /build.*/
         /\\\\.git/
         /\\\\.gitignore
         /\\\\.idea/
