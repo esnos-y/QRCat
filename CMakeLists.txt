@@ -1,5 +1,21 @@
-cmake_minimum_required(VERSION 3.15...3.30)
-project(QRCat_cmake_project)
+cmake_minimum_required(VERSION 3.22)
+project(QRCat_cmake_project
+        VERSION 0.0.1
+        LANGUAGES CXX
+)
+
+set(QRCAT_CERTUM_CLOUD_CERT_MD1_THUMBPRINT "" CACHE STRING
+        "Thumbprint of a Certum Cloud Certificate to sign binaries on Windows."
+)
+
+string(LENGTH "${QRCAT_CERTUM_CLOUD_CERT_MD1_THUMBPRINT}" THUMB_LENGTH)
+if ("${QRCAT_CERTUM_CLOUD_CERT_MD1_THUMBPRINT}" STREQUAL "")
+    set(SIGN_BINARIES OFF)
+elseif ("${QRCAT_CERTUM_CLOUD_CERT_MD1_THUMBPRINT}" MATCHES "^[0-9A-Fa-f]*$" AND ${THUMB_LENGTH} EQUAL 40)
+    set(SIGN_BINARIES ON)
+else ()
+    message(FATAL_ERROR "QRCAT_CERTUM_CLOUD_CERT_MD1_THUMBPRINT cache variable is not set to a 40 bytes hexadecimal string")
+endif ()
 
 find_package(OpenCV CONFIG REQUIRED)
 find_library(ZBAR_LIB zbar REQUIRED)
@@ -61,7 +77,7 @@ if (UNIX AND NOT APPLE)
     )
     install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/scripts/set_libs_runpath.cmake)
 endif ()
-if (WIN32)
+if (WIN32 AND ${SIGN_BINARIES})
     configure_file(
             ${CMAKE_CURRENT_SOURCE_DIR}/scripts/sign_binaries_windows.cmake.in
             ${CMAKE_CURRENT_BINARY_DIR}/scripts/sign_binaries_windows.cmake
@@ -70,4 +86,12 @@ if (WIN32)
     install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/scripts/sign_binaries_windows.cmake)
 endif ()
 set(CPACK_PACKAGE_NAME QRCat)
+set(CPACK_SOURCE_IGNORE_FILES
+        /cmake-build-.*/
+        /build/
+        /\\\\.git/
+        /\\\\.gitignore
+        /\\\\.idea/
+)
+set(CPACK_PACKAGE_CHECKSUM SHA256)
 include(CPack)

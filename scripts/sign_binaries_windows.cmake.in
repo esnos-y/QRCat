@@ -1,7 +1,8 @@
-if (DEFINED ENV{QRCAT_CERTUM_CLOUD_CERT_THUMB})
-    execute_process(
-            COMMAND python @CMAKE_CURRENT_SOURCE_DIR@/scripts/sign_binaries_windows.py $ENV{QRCAT_CERTUM_CLOUD_CERT_THUMB} ${CMAKE_INSTALL_PREFIX}/bin
-            COMMAND_ERROR_IS_FATAL ANY
-            COMMAND_ECHO STDOUT
-    )
-endif ()
+execute_process(
+        COMMAND python
+        @CMAKE_CURRENT_SOURCE_DIR@/scripts/sign_binaries_windows.py
+        ${CMAKE_INSTALL_PREFIX}/bin
+        @QRCAT_CERTUM_CLOUD_CERT_MD1_THUMBPRINT@
+        COMMAND_ERROR_IS_FATAL ANY
+        COMMAND_ECHO STDOUT
+)
