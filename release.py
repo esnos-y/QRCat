@@ -1,6 +1,8 @@
 import subprocess as sp
+import sys
 from pathlib import Path
 import argparse
+import platform
 
 
 def main():
@@ -13,10 +15,20 @@ def main():
     parser.add_argument("--cert-thumb",
                         help="MD1 thumbprint of the Certum Cloud Certificate to use for signing binaries on Windows",
                         required=False)
+    parser.add_argument("--target-i386",
+                        help="Pass compiler and linker flags to cross compile for i386 on Linux via MultiArch",
+                        action="store_true")
     args = parser.parse_args()
-    cert_thumb = args.cert_thumb
 
+    cert_thumb = args.cert_thumb
     cpack_out_dir = args.cpack_out_dir
+    target_i386 = args.target_i386
+
+    if target_i386 and platform.system() != "Linux":
+        print(
+            "Targeting i386 via this script is only valid on Linux, if on Windows please use the x86 native development CMD instead to target x86",
+            file=sys.stderr)
+        return 1
 
     parent_dir = Path(__file__).parent
     source_dir = parent_dir
@@ -34,6 +46,19 @@ def main():
                   build_dir_posix]
     if cert_thumb:
         config_cmd += [f"-DQRCAT_CERTUM_CLOUD_CERT_MD1_THUMBPRINT={cert_thumb}"]
+
+    # https://wiki.debian.org/Multiarch/Compiling?action=recall&rev=9
+    if target_i386:
+        config_cmd += [
+            "-DCMAKE_C_FLAGS=-m32",
+            "-DCMAKE_CXX_FLAGS=-m32",
+            "-DCMAKE_Fortran_FLAGS=-m32",
+            "-DCMAKE_EXE_LINKER_FLAGS=-m32",
+            "-DCMAKE_MODULE_LINKER_FLAGS=-m32",
+            "-DCMAKE_SHARED_LINKER_FLAGS=-m32",
+            "-DCMAKE_ASM-ATT_FLAGS=-m32"
+        ]
+
     sp.run(config_cmd, check=True)
     if not args.pack_source:
         build_cmd = ["cmake", "--build", build_dir_posix]
