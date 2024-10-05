@@ -11,9 +11,9 @@ set(QRCAT_CERTUM_CLOUD_CERT_MD1_THUMBPRINT "" CACHE STRING
 # NOTE: double quotes around dollar sign variable expansion is important
 # otherwise an empty string evaluates to an empty literal causing CMake syntax error
 string(LENGTH "${QRCAT_CERTUM_CLOUD_CERT_MD1_THUMBPRINT}" THUMB_LENGTH)
-if ("${QRCAT_CERTUM_CLOUD_CERT_MD1_THUMBPRINT}" STREQUAL "")
+if (${THUMB_LENGTH} EQUAL 0)
     set(SIGN_BINARIES OFF)
-elseif ("${QRCAT_CERTUM_CLOUD_CERT_MD1_THUMBPRINT}" MATCHES "^[0-9A-Fa-f]*$" AND ${THUMB_LENGTH} EQUAL 40)
+elseif (${THUMB_LENGTH} EQUAL 40 AND "${QRCAT_CERTUM_CLOUD_CERT_MD1_THUMBPRINT}" MATCHES "^[0-9A-Fa-f]*$")
     set(SIGN_BINARIES ON)
 else ()
     message(FATAL_ERROR "QRCAT_CERTUM_CLOUD_CERT_MD1_THUMBPRINT cache variable is not set to a 40 bytes hexadecimal string")
