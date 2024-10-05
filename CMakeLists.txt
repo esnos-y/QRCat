@@ -8,6 +8,8 @@ set(QRCAT_CERTUM_CLOUD_CERT_MD1_THUMBPRINT "" CACHE STRING
         "Thumbprint of a Certum Cloud Certificate to sign binaries on Windows."
 )
 
+# NOTE: double quotes around dollar sign variable expansion is important
+# otherwise an empty string evaluates to an empty literal causing CMake syntax error
 string(LENGTH "${QRCAT_CERTUM_CLOUD_CERT_MD1_THUMBPRINT}" THUMB_LENGTH)
 if ("${QRCAT_CERTUM_CLOUD_CERT_MD1_THUMBPRINT}" STREQUAL "")
     set(SIGN_BINARIES OFF)
